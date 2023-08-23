@@ -8,14 +8,25 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var units: [String] = ["Meters", "Kilometers", "Feet", "Yards", "Miles"]
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        NavigationView {
+            Form {
+                Section {
+                    Text("Choose your length")
+                    
+                    Picker("Select your unit", selection: $units) {
+                        ForEach(units, id: \.self) {
+                            Text($0)
+                        }
+                    }
+                }
+                Section {
+                    Text("hasta")
+                }
+            }
+            .navigationTitle("LengthConversion")
         }
-        .padding()
     }
 }
 
