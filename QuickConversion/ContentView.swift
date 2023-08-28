@@ -9,20 +9,29 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var units: [String] = ["Meters", "Kilometers", "Feet", "Yards", "Miles"]
+    @State private var length: Double = 0.0
+    @State private var result: Double = 0.0
     var body: some View {
         NavigationView {
             Form {
                 Section {
-                    Text("Choose your length")
+                    TextField("Length", value: $length, format: .number)
                     
-                    Picker("Select your unit", selection: $units) {
+                    Picker("Select a Unit", selection: $units) {
                         ForEach(units, id: \.self) {
                             Text($0)
                         }
                     }
                 }
                 Section {
-                    Text("hasta")
+                    Picker("Convert to", selection: $units) {
+                        ForEach(units, id: \.self) {
+                            Text($0)
+                        }
+                    }
+                }
+                Section {
+                    Text("Result")
                 }
             }
             .navigationTitle("LengthConversion")
