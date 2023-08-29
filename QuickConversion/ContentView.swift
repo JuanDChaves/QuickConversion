@@ -11,17 +11,27 @@ struct ContentView: View {
     @State private var units: [String] = ["Meters", "Kilometers", "Feet", "Yards", "Miles"]
     @State private var length: Double = 0.0
     @State private var result: Double = 0.0
+    
+    
+    
     var body: some View {
         NavigationView {
             Form {
                 Section {
                     TextField("Length", value: $length, format: .number)
+                        .keyboardType(.decimalPad)
                     
                     Picker("Select a Unit", selection: $units) {
                         ForEach(units, id: \.self) {
                             Text($0)
                         }
                     }
+                    .pickerStyle(.segmented)
+                } header: {
+                    Text("Convert:")
+                }
+                Section {
+
                 }
                 Section {
                     Picker("Convert to", selection: $units) {
@@ -29,9 +39,11 @@ struct ContentView: View {
                             Text($0)
                         }
                     }
-                }
-                Section {
-                    Text("Result")
+                    .pickerStyle(.segmented)
+                    
+                    Text(length, format: .number)
+                } header: {
+                    Text("To:")
                 }
             }
             .navigationTitle("LengthConversion")
