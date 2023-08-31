@@ -11,32 +11,50 @@ struct ContentView: View {
     @State private var selectedOriginalUnits: String = "Meters"
     @State private var selectedNewUnits: String = "Meters"
     @State private var inputLength: Double = 0.0
-    @State private var result: Double = 0.0
+    @FocusState private var inputLengthIsFocused: Bool
     
     let units: [String]  = ["Meters", "Kilometers", "Feet", "Yards", "Miles"]
     
-    var normalizedSelectedUnit: Double {
-        var normalizedUnit: Double = 0.0
+    var normalizedEnteredValue: Double {
+        var normalizedValue: Double = 0.0
+        
         switch selectedOriginalUnits {
         case "Meters":
-            normalizedUnit = inputLength
+            normalizedValue = inputLength
         case "Kilometers":
-            normalizedUnit = inputLength * 100
+            normalizedValue = inputLength * 100
         case "Feet":
-            normalizedUnit = inputLength * 0.3048
+            normalizedValue = inputLength * 0.3048
         case "Yards":
-            normalizedUnit = inputLength * 0.9144
+            normalizedValue = inputLength * 0.9144
         case "Miles":
-            normalizedUnit = inputLength * 1609
+            normalizedValue = inputLength * 1609
         default:
             print("default")
         }
         
-        if selectedNewUnits == "Meters" {
-            normalizedUnit = inputLength
-        } else {
+        return normalizedValue
+    }
+    
+    var finalConvertedValue: Double {
+        var convertedValue: Double = normalizedEnteredValue
+        
+        switch selectedNewUnits {
+        case "Meters":
+            convertedValue = convertedValue * 1
+        case "Kilometers":
+            convertedValue = convertedValue / 100
+        case "Feet":
+            convertedValue = convertedValue / 0.3048
+        case "Yards":
+            convertedValue = convertedValue / 0.9144
+        case "Miles":
+            convertedValue = convertedValue / 1609
+        default:
+            print("default")
         }
-        return normalizedUnit
+        
+        return convertedValue
     }
     
     
@@ -46,6 +64,7 @@ struct ContentView: View {
                 Section {
                     TextField("Length", value: $inputLength, format: .number)
                         .keyboardType(.decimalPad)
+                        .focused($inputLengthIsFocused)
                     
                     Picker("Select a Unit", selection: $selectedOriginalUnits) {
                         ForEach(units, id: \.self) {
@@ -67,12 +86,21 @@ struct ContentView: View {
                     }
                     .pickerStyle(.segmented)
                     
-                    Text(inputLength, format: .number)
+                    Text(finalConvertedValue, format: .number)
                 } header: {
                     Text("To:")
                 }
             }
             .navigationTitle("LengthConversion")
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    
+                    Button("Done") {
+                        inputLengthIsFocused = false
+                    }
+                }
+            }
         }
     }
 }
